@@ -1,58 +1,66 @@
--- 🔧 Buat fungsi create yang otomatis bikin GUI glitch
-local function create()
-	-- Hapus GUI lama kalau ada
+--// Fungsi utama create
+local create = function()
 	local player = game.Players.LocalPlayer
-	local playerGui = player:WaitForChild("PlayerGui")
-	local oldGui = playerGui:FindFirstChild("NotFreeNotice")
-	if oldGui then oldGui:Destroy() end
+	local gui = Instance.new("ScreenGui")
+	gui.Name = "GlitchUI"
+	gui.ResetOnSpawn = false
+	gui.Parent = player:WaitForChild("PlayerGui")
 
-	-- ScreenGui
-	local screenGui = Instance.new("ScreenGui")
-	screenGui.Name = "NotFreeNotice"
-	screenGui.ResetOnSpawn = false
-	screenGui.Parent = playerGui
-
-	-- Frame putih
+	-- Frame putih menutupi seluruh layar (tanpa transparansi)
 	local frame = Instance.new("Frame")
-	frame.Size = UDim2.new(0.6, 0, 0.3, 0)
-	frame.Position = UDim2.new(0.2, 0, 0.35, 0)
+	frame.Size = UDim2.new(1, 0, 1, 0)
+	frame.Position = UDim2.new(0, 0, 0, 0)
 	frame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 	frame.BorderSizePixel = 0
-	frame.Parent = screenGui
+	frame.BackgroundTransparency = 0
+	frame.Parent = gui
 
-	-- Teks utama
-	local textLabel = Instance.new("TextLabel")
-	textLabel.Size = UDim2.new(1, 0, 1, 0)
-	textLabel.BackgroundTransparency = 1
-	textLabel.Text = "SEMUA SKRIP TIDAK GRATIS BRO🖕🖕 (Alfa)"
-	textLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-	textLabel.Font = Enum.Font.FredokaOne
-	textLabel.TextScaled = true
-	textLabel.Parent = frame
+	-- Label teks di tengah
+	local text = Instance.new("TextLabel")
+	text.AnchorPoint = Vector2.new(0.5, 0.5)
+	text.Position = UDim2.new(0.5, 0, 0.5, 0)
+	text.Size = UDim2.new(0.8, 0, 0.2, 0)
+	text.BackgroundTransparency = 1
+	text.Text = "SEMUA SKRIP TIDAK GRATIS🖕🖕 (Alfa)"
+	text.Font = Enum.Font.Arcade or Enum.Font.FredokaOne
+	text.TextScaled = true
+	text.TextColor3 = Color3.fromRGB(255, 255, 255)
+	text.TextStrokeTransparency = 0.2
+	text.TextStrokeColor3 = Color3.fromRGB(255, 0, 0)
+	text.Parent = frame
 
-	-- Glitch layer merah
-	local glitch1 = textLabel:Clone()
-	glitch1.TextColor3 = Color3.fromRGB(255, 0, 0)
-	glitch1.Parent = frame
+	-- Suara glitch
+	local sound = Instance.new("Sound", gui)
+	sound.SoundId = "rbxassetid://9118823105" -- contoh suara glitch
+	sound.Volume = 0.6
+	sound.Looped = false
 
-	-- Glitch layer biru
-	local glitch2 = textLabel:Clone()
-	glitch2.TextColor3 = Color3.fromRGB(0, 255, 255)
-	glitch2.Parent = frame
-
-	-- Efek glitch acak
+	-- Efek glitch (teks saja)
 	task.spawn(function()
-		while true do
-			local offset1 = math.random(-3, 3)
-			local offset2 = math.random(-3, 3)
-			glitch1.Position = UDim2.new(0, offset1, 0, offset2)
-			glitch2.Position = UDim2.new(0, -offset1, 0, -offset2)
-			glitch1.TextTransparency = math.random() * 0.3
-			glitch2.TextTransparency = math.random() * 0.3
+		while gui.Parent do
+			-- Warna teks acak cepat
+			text.TextColor3 = Color3.fromRGB(
+				math.random(150, 255),
+				math.random(150, 255),
+				math.random(150, 255)
+			)
+
+			-- Getar kecil
+			text.Position = UDim2.new(0.5, math.random(-4, 4), 0.5, math.random(-4, 4))
+			text.Rotation = math.random(-2, 2)
+
+			-- Transparansi teks acak
+			text.TextTransparency = math.random(0, 3) / 10
+
+			-- Kadang bunyi glitch
+			if math.random(1, 15) == 1 then
+				sound:Play()
+			end
+
 			task.wait(0.05)
 		end
 	end)
 end
 
--- 🧠 Jalankan fungsi create
+-- Jalankan fungsi
 create()
